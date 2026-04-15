@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            // ->login() // Dimatikan agar tidak muncul halaman login
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                // Authenticate::class, // Dimatikan agar bisa langsung masuk ke dashboard
             ]);
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             // Menghubungkan ke tabel categories
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('keterangan')->nullable();
-            $table->integer('odo'); // Odometer
+            $table->integer('odo')->nullable();
             $table->decimal('biaya', 12, 2); // Nominal biaya
             $table->timestamps();
         });
