@@ -31,16 +31,24 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+
+            // --- Matikan Global Search ---
+            ->globalSearch(false)
+            // -----------------------------
+
+            // --- Bagian Branding ---
+            ->brandName('Grand Livina')
+            ->brandLogo(asset('img/logo.png'))
+            ->brandLogoHeight('3rem')
+            ->favicon(asset('img/favicon.ico'))
+            // -----------------------
+
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 \App\Filament\Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            // ->widgets([
-            //     AccountWidget::class,
-            //     FilamentInfoWidget::class,
-            // ])
 
             ->renderHook(
                 'panels::body.end',

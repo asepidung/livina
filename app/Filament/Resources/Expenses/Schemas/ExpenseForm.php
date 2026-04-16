@@ -15,15 +15,30 @@ class ExpenseForm
             ->components([
                 DatePicker::make('tanggal')
                     ->required(),
+
                 Select::make('category_id')
                     ->relationship('category', 'name')
-                    ->required(),
+                    ->searchable() // Biar bisa dicari dengan diketik
+                    ->preload()    // Biar data langsung muncul pas diklik
+                    ->required()
+                    // INI FITUR TAMBAH KATEGORI INSTAN (+)
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nama Kategori Baru')
+                            ->required()
+                            ->unique('categories', 'name'),
+                    ]),
+
                 TextInput::make('keterangan'),
+
                 TextInput::make('odo')
+                    ->label('Odometer')
                     ->numeric(),
+
                 TextInput::make('biaya')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->prefix('Rp'), // Tambahin prefix biar cakep pas input
             ]);
     }
 }
