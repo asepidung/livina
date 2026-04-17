@@ -6,12 +6,12 @@ use App\Models\Expense;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Filament\Widgets\Concerns\InteractsWithPageFilters; // Tambahkan ini
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Facades\DB;
 
 class ExpenseSummaryTable extends BaseWidget
 {
-    use InteractsWithPageFilters; // Tambahkan ini
+    use InteractsWithPageFilters;
 
     protected static ?string $heading = 'Rangkuman Biaya Periode Ini';
     protected static ?int $sort = 1;
@@ -21,14 +21,14 @@ class ExpenseSummaryTable extends BaseWidget
     {
         return $table
             ->query(function () {
-                // Ambil data dari filter dashboard
-                $bulan = $this->tableFilters['bulan'] ?? now()->format('m');
-                $tahun = $this->tableFilters['tahun'] ?? now()->format('Y');
+                // INI YANG DIBENERIN: Ganti tableFilters jadi filters
+                $startDate = $this->filters['startDate'] ?? now()->startOfMonth();
+                $endDate = $this->filters['endDate'] ?? now()->endOfMonth();
 
                 return Expense::query()
                     ->select('category_id as id', 'category_id', DB::raw('SUM(biaya) as total'))
-                    ->whereMonth('tanggal', $bulan)
-                    ->whereYear('tanggal', $tahun)
+                    ->when($startDate, fn($query) => $query->whereDate('tanggal', '>=', $startDate))
+                    ->when($endDate, fn($query) => $query->whereDate('tanggal', '<=', $endDate))
                     ->groupBy('category_id')
                     ->with('category');
             })

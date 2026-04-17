@@ -11,25 +11,21 @@ class ExpenseChart extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    // Heading di Chart JANGAN pakai static
     protected ?string $heading = 'Distribusi Pengeluaran';
-
-    // Sort di Chart WAJIB pakai static
     protected static ?int $sort = 2;
-
     protected int | string | array $columnSpan = 1;
-
     protected ?string $maxHeight = '300px';
 
     protected function getData(): array
     {
-        $bulan = $this->tableFilters['bulan'] ?? now()->format('m');
-        $tahun = $this->tableFilters['tahun'] ?? now()->format('Y');
+        // INI YANG DIBENERIN: Ganti tableFilters jadi filters
+        $startDate = $this->filters['startDate'] ?? now()->startOfMonth();
+        $endDate = $this->filters['endDate'] ?? now()->endOfMonth();
 
         $data = Expense::query()
             ->select('category_id', DB::raw('SUM(biaya) as total'))
-            ->whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+            ->when($startDate, fn($query) => $query->whereDate('tanggal', '>=', $startDate))
+            ->when($endDate, fn($query) => $query->whereDate('tanggal', '<=', $endDate))
             ->groupBy('category_id')
             ->with('category')
             ->get();
